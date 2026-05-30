@@ -1,0 +1,9 @@
+go 1.25.0
+
+use (
+	./packages/devhex
+	./packages/platformkit/go/devenv
+)
+
+// packages/platformkit/go/devhex duplicates packages/devhex (same module path).
+// packages/mcpkit/go/go.work references missing pheno-mcp-* modules — deferred.
