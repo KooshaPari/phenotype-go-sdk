@@ -5,5 +5,17 @@ use (
 	./packages/platformkit/go/devenv
 )
 
-// packages/platformkit/go/devhex duplicates packages/devhex (same module path).
-// packages/mcpkit/go/go.work references missing pheno-mcp-* modules — deferred.
+// Absorption (rationalization): PlatformKit was merged history-preserving via
+// `git subtree` at packages/platformkit/ (squash of upstream e408165). It is the
+// canonical Go SDK monorepo home for the devenv/devhex modules.
+//
+// Known overlaps (left in place for reversibility; resolve in a follow-up):
+//   - packages/platformkit/go/devhex duplicates packages/devhex (same module path
+//     github.com/KooshaPari/devenv-abstraction); only packages/devhex is `use`d.
+//   - packages/platformkit/go/devenv is the older lowercase-path copy
+//     (github.com/kooshapari/devenv-abstraction).
+//
+// PhenoMCP Go module decision: PhenoMCP RETAINS its own Go module (per
+// RATIONALIZATION_PLAN). It is consumed by phenotype-go-sdk as a dependency, not
+// vendored here. packages/mcpkit/go/go.work references not-yet-present
+// pheno-mcp-* modules and is intentionally deferred (not part of this absorption).
