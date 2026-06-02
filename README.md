@@ -1,3 +1,6 @@
+> **Work state:** SCAFFOLD · **Progress:** `████░░░░░░ 40%`
+> Builds on canonical devhex + CI live; auth/data/observability/resilience kits are known-gap stubs (ADR-011). · updated 2026-06-02
+
 # phenotype-go-sdk
 
 Phenotype-org Go SDK — consolidates Go Kit/SDK packages from the KooshaPari org.
