@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - uses: actions/setup-go@0aaccfd150d50ccaeb58ebd88d36e91967a5f35b # v5
+        with:
+          go-version: '1.25'
+
+      # Workspace-aware: resolve the go.work members, then build/vet/test each.
+      - name: go work sync
+        run: go work sync
+
+      - name: Build
+        run: go build ./...
+        working-directory: packages/devhex
+
+      - name: Vet
+        run: go vet ./...
+        working-directory: packages/devhex
+
+      - name: Test
+        run: go test ./...
+        working-directory: packages/devhex
