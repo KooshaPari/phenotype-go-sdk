@@ -1,5 +1,13 @@
-> **Work state:** SCAFFOLD · **Progress:** `████░░░░░░ 40%`
-> Builds on canonical devhex + CI live; auth/data/observability/resilience kits are known-gap stubs (ADR-011). · updated 2026-06-02
+## Work State
+
+| Field | Value |
+|---|---|
+| Last commit | 2026-06-02 |
+| Open issues | 0 |
+| Open PRs | 0 |
+| Focus | Go SDK scaffold (ADR-011) |
+
+Progress: ████░░░░░░ 40%
 
 # phenotype-go-sdk
 
