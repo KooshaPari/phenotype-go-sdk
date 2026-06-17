@@ -1,3 +1,7 @@
+
+> **RETIRED (2026-06-17)** — Per [ADR-017](https://github.com/KooshaPari/PhenoSpecs/blob/main/adrs/017-mcp-polyrepo-boundaries.md) and PhenoMCPServers boundary audit issue #7.
+> Go MCP work lives in [PhenoFastMCP-go](https://github.com/KooshaPari/PhenoFastMCP-go) (framework) and tier-1 edges only ([MCPForge](https://github.com/KooshaPari/MCPForge), [phenotype-ops-mcp](https://github.com/KooshaPari/phenotype-ops-mcp)).
+> Do not add new domain logic here.
 # Genesis documentation scaffold
 
 Copy this entire directory into a new repository root (or use `hexakit genesis init` when available).
