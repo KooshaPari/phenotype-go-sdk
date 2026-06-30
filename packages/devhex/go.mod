@@ -2,6 +2,8 @@ module github.com/KooshaPari/devenv-abstraction
 
 go 1.25.0
 
+toolchain go1.26.4
+
 require github.com/moby/moby/client v0.4.1
 
 require (

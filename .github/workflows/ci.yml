@@ -20,7 +20,7 @@ jobs:
 
       - uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c # v5
         with:
-          go-version: '1.25'
+          go-version: '1.26.4'
 
       # Workspace-aware: resolve the go.work members, then build/vet/test each.
       - name: go work sync
@@ -46,7 +46,7 @@ jobs:
 
       - uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c # v5
         with:
-          go-version: '1.25'
+          go-version: '1.26.4'
 
       - name: go work sync
         run: go work sync
@@ -65,7 +65,7 @@ jobs:
 
       - uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c # v5
         with:
-          go-version: '1.25'
+          go-version: '1.26.4'
 
       - name: go work sync
         run: go work sync
