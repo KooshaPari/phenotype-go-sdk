@@ -2,11 +2,63 @@
 package cli
 
 import (
+	"errors"
 	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
 )
+
+// ExitCode represents a process exit code.
+type ExitCode int
+
+const (
+	// ExitSuccess indicates successful completion.
+	ExitSuccess ExitCode = 0
+	// ExitError indicates a general error.
+	ExitGeneral ExitCode = 1
+	// ExitBadArgs indicates invalid arguments or usage.
+	ExitBadArgs ExitCode = 2
+	// ExitIOError indicates an I/O failure.
+	ExitIOError ExitCode = 3
+	// ExitTimeout indicates a timeout.
+	ExitTimeout ExitCode = 4
+)
+
+// ExitError is a structured error that carries an exit code and a user-facing
+// message alongside the wrapped technical error. Use this in command RunE
+// functions to signal both the technical root cause and the right exit code.
+type ExitError struct {
+	// Code is the process exit code.
+	Code ExitCode
+	// Msg is a user-facing message (printed to stderr).
+	Msg string
+	// Err is the wrapped technical error (logged but not always shown to user).
+	Err error
+}
+
+// Error implements the error interface. Returns the user-facing message when
+// available, falling back to the wrapped error.
+func (e *ExitError) Error() string {
+	if e.Msg != "" {
+		return e.Msg
+	}
+	if e.Err != nil {
+		return e.Err.Error()
+	}
+	return "unknown error"
+}
+
+// Unwrap returns the wrapped error for errors.Is/errors.As compatibility.
+func (e *ExitError) Unwrap() error {
+	return e.Err
+}
+
+// NewExitError creates a new ExitError with the given code, message, and
+// optional wrapped cause.
+func NewExitError(code ExitCode, msg string, cause error) *ExitError {
+	return &ExitError{Code: code, Msg: msg, Err: cause}
+}
 
 // RootCommandConfig holds configuration for creating a root cobra command.
 type RootCommandConfig struct {
@@ -42,7 +94,7 @@ func CreateRootCommand(config RootCommandConfig, runFunc func(cmd *cobra.Command
 		Short:   config.Short,
 		Long:    config.Long,
 		Version: config.Version,
-		Examples: config.Examples,
+		Example: config.Examples,
 		RunE:    runFunc,
 		CompletionOptions: cobra.CompletionOptions{
 			DisableDefaultCmd: false,
@@ -80,21 +132,28 @@ func CreateCommand(use string, short string, long string, examples string, runFu
 		Use:      use,
 		Short:    short,
 		Long:     long,
-		Examples: examples,
+		Example: examples,
 		RunE:     runFunc,
 	}
 }
 
-// ExecuteCommand executes a cobra command and handles errors.
-// This is a convenience function for executing the root command.
+// ExecuteCommand executes a cobra command and handles errors with structured
+// exit codes. It recognises *ExitError for fine-grained exit codes and formats
+// user-facing messages to stderr. For all other errors it defaults to exit
+// code 1 and prints "Error: <message>" to stderr.
 //
 // Parameters:
 //   - rootCmd: The root command to execute
 //
 // Returns:
-//   - int: The exit code (0 for success, non-zero for error)
+//   - int: The exit code
 func ExecuteCommand(rootCmd *cobra.Command) int {
 	if err := rootCmd.Execute(); err != nil {
+		var exitErr *ExitError
+		if errors.As(err, &exitErr) {
+			fmt.Fprintf(os.Stderr, "Error: %s\n", exitErr.Error())
+			return int(exitErr.Code)
+		}
 		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		return 1
 	}
@@ -163,8 +222,8 @@ func (cb *CommandBuilder) Long(long string) *CommandBuilder {
 }
 
 // Examples sets the usage examples of the command.
-func (cb *CommandBuilder) Examples(examples string) *CommandBuilder {
-	cb.cmd.Examples = examples
+func (cb *CommandBuilder) Example(example string) *CommandBuilder {
+	cb.cmd.Example = example
 	return cb
 }
 
@@ -210,7 +269,8 @@ func (cb *CommandBuilder) Build() *cobra.Command {
 }
 
 // StandardErrorHandler provides standard error handling for commands.
-// It logs the error and returns an appropriate exit code.
+// It recognises *ExitError for fine-grained exit codes and formats
+// user-facing messages to stderr.
 //
 // Parameters:
 //   - rootCmd: The root command
@@ -220,6 +280,11 @@ func (cb *CommandBuilder) Build() *cobra.Command {
 //   - int: The exit code
 func StandardErrorHandler(rootCmd *cobra.Command, err error) int {
 	if err != nil {
+		var exitErr *ExitError
+		if errors.As(err, &exitErr) {
+			fmt.Fprintf(os.Stderr, "Error: %s\n", exitErr.Error())
+			return int(exitErr.Code)
+		}
 		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		return 1
 	}
