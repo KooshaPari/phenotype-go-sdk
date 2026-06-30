@@ -1,20 +1,33 @@
 # phenotype-go-sdk
 
 **Status:** ACTIVE
-**Last updated:** 2026-06-20
+**Last updated:** 2026-06-30
 
 ## Overview
 
-`phenotype-go-sdk` is part of the [Phenotype](https://github.com/KooshaPari) fleet.
-See the [phenotype-apps meta-repo](https://github.com/KooshaPari/phenotype-apps)
-`AGENTS.md` for fleet-wide conventions, build commands, and ADR references.
+`phenotype-go-sdk` is the shared Go kernel (SSOT) for Phenotype org repos.
+Active module: `packages/devhex` (devenv abstraction, hexagonal architecture).
+Other packages under `packages/` are standalone (not in `go.work`) or scaffold.
 
 ## Quickstart
 
 ```bash
 git clone https://github.com/KooshaPari/phenotype-go-sdk.git
 cd phenotype-go-sdk
-# follow repo-specific build instructions in SPEC.md
+go work sync
+cd packages/devhex
+
+# Build
+go build ./...
+
+# Test (race detector required)
+go test -race ./...
+
+# Static analysis
+staticcheck ./...      # install: go install honnef.co/go/tools/cmd/staticcheck@latest
+
+# Vulnerability scan
+govulncheck ./...      # install: go install golang.org/x/vuln/cmd/govulncheck@latest
 ```
 
 ## Conventions
