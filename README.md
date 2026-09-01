@@ -6,6 +6,8 @@
 
 Copy this entire directory into a new repository root (or use `hexakit genesis init` when available).
 
+[![AI slop inside](https://sladge.net/badge.svg)](https://sladge.net) [![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/KooshaPari/phenotype-go-sdk/total)](https://github.com/KooshaPari/phenotype-go-sdk/releases)
+
 HexaKit role: **project scaffolding and templates only** — not domain SDK libraries. See [charter.md](charter.md) boundary class `genesis`.
 
 **Master spec:** [docs/genesis/STANDARD.md](../../docs/genesis/STANDARD.md)
